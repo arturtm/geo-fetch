@@ -8,9 +8,10 @@ url = 'http://api.geonames.org/wikipediaSearchJSON?maxRows=1&'
 
 
 def run():
-    # Try get args from CLI
+    #Try get args from CLI
     try:
-        cities = sys.argv[1].replace(' ','')
+        #Get params with whitespaces
+        cities = ' '.join(sys.argv[1:])
     except IndexError as e:
         print('Need to input data')
 
@@ -18,6 +19,7 @@ def run():
 
     #Search for single city
     for city in all_cities:
+        print('Input city:', city)
         query = city.lower().strip()
 
         resp = requests.get(url + 'q=' + query + '&username=' + geonameuser)
@@ -33,8 +35,8 @@ def run():
                 for row in csv_reader:
                     #Check match country for match
                     if row['CountryCode'] == city:
-                        print (row['Country'])
-                        print (row['Code'])
+                        print ('Country:', row['Country'])
+                        print ('Currency:', row['Code'])
         except:
             print('City does not found')
 
