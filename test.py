@@ -25,20 +25,25 @@ def run():
         resp = requests.get(url + 'q=' + query + '&username=' + geonameuser)
         cities = resp.json()
 
-        try:
-            city = cities['geonames'][0]['countryCode']
-
-            #Open currency csv by country
-            with open('country-code-to-currency-code-mapping.csv', mode='r') as csv_file:
-                csv_reader = csv.DictReader(csv_file)
-
-                for row in csv_reader:
-                    #Check match country for match
-                    if row['CountryCode'] == city:
-                        print ('Country:', row['Country'])
-                        print ('Currency:', row['Code'])
-        except:
+        #Break if city not founded in API
+        if not cities['geonames']:
             print('City does not found')
+            break
+
+        country_code = cities['geonames'][0]['countryCode']
+
+        #Open currency csv by country
+        with open('country-code-to-currency-code-mapping.csv', mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+
+            for row in csv_reader:
+                #Check match country for match
+                if row['CountryCode'] == country_code:
+                    print ('Country:', row['Country'])
+                    print ('Currency:', row['Code'])
+                    print ('======================')
+
+
 
 
 if __name__ == '__main__':
